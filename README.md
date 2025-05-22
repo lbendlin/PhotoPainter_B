@@ -19,7 +19,7 @@ waveshare electronics</br>
 [E-Paper-Floyd-Steinberg - Waveshare Wiki](https://www.waveshare.net/wiki/E-Paper-Floyd-Steinberg)  
 
 三、使用我们提供的六色抖动图片转换工具。下载链接：  
-[PhotoPainter_B-BMP.zip](https://www.waveshare.net/w/upload/3/37/PhotoPainter_B-BMP.zip)  
+[PhotoPainter_B-Floyd.zip](https://www.waveshare.net/w/upload/5/5b/ConverTo6c_bmp-7.3.zip)  
 
 ### 图片转换工具使用
 
@@ -69,7 +69,7 @@ Related documentation can be found at:
 [E-Paper-Floyd-Steinberg - Waveshare Wiki](https://www.waveshare.com/wiki/E-Paper_Floyd-Steinberg)  
 
 3.Using our provided 6-color dithering image conversion tool. Download link:  
-[PhotoPainter_B-BMP.zip](https://www.waveshare.net/w/upload/3/37/PhotoPainter_B-BMP.zip)  
+[PhotoPainter_B-Floyd.zip](https://files.waveshare.com/wiki/common/ConverTo6c_bmp-7.3.zip) 
 
 ### How to Use the Image Conversion Tool
 
