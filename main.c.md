@@ -61,7 +61,7 @@ void run_display(Time_data Time, Time_data alarmTime, char hasCard)
 
 int main(void)
 {
-    Time_data Time = {2024-2000, 3, 31, 0, 0, 0};
+    Time_data Time = {2025-2000, 5, 31, 0, 0, 0};
     Time_data alarmTime = Time;
     // alarmTime.seconds += 10;
     // alarmTime.minutes += 5; 

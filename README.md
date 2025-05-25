@@ -61,7 +61,7 @@ waveshare electronics</br>
 This example code is for PhotoPainter (B), which is open-sourced in a friendly manner. If you find any bugs, please feel free to report them.
 
 Related documentation can be found at:  
-[PhotoPainter - Waveshare Wiki](https://www.waveshare.com/wiki/PhotoPainter)  
+[PhotoPainter - Waveshare Wiki](https://www.waveshare.com/wiki/PhotoPainter_(B))  
 
 ## Image Preparation
 
