@@ -64,8 +64,8 @@ int main(void)
     Time_data Time = {2025-2000, 5, 31, 0, 0, 0};
     Time_data alarmTime = Time;
     // alarmTime.seconds += 10;
-    // alarmTime.minutes += 5; 
-    alarmTime.hours +=12;
+    alarmTime.minutes += 5; 
+    //alarmTime.hours +=12;
     char isCard = 0;
   
     printf("Init...\r\n");

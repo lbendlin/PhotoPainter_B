@@ -76,7 +76,7 @@
 *
 ******************************************************************************/
 #include "GUI_Paint.h"
-#include "Debug.h"
+//#include "Debug.h"
 
 #include <stdint.h>
 #include <stdlib.h>

@@ -29,7 +29,6 @@
 #
 ******************************************************************************/
 #include "EPD_7in3e.h"
-#include "Debug.h"
 
 /******************************************************************************
 function :  Software reset
@@ -77,11 +76,11 @@ parameter:
 ******************************************************************************/
 static void EPD_7IN3E_ReadBusyH(void)
 {
-    Debug("e-Paper busy H\r\n");
+    Serial.printf("e-Paper busy H\r\n");
     while(!DEV_Digital_Read(EPD_BUSY_PIN)) {      //LOW: busy, HIGH: idle
         DEV_Delay_ms(1);
     }
-    Debug("e-Paper busy H release\r\n");
+    Serial.printf("e-Paper busy H release\r\n");
 }
 
 /******************************************************************************

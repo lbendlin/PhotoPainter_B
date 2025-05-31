@@ -1,6 +1,6 @@
 #include "EPD_7in3e.h"
 #include "GUI_Paint.h"
-#include "ImageData.h"
+//#include "ImageData.h"
 #include "DEV_Config.h"
 #include <SPI.h>
 #include <SD.h>
@@ -15,7 +15,7 @@ char FileName[100];
 // line buffer
 uint8_t buff[2400] = { 0 };
 uint8_t* BlackImage;
-//RTC_DATA_ATTR uint8_t imageCount;
+
 // color mapping from prepared BMP to EPD colors
 uint8_t color6(uint16_t red, uint16_t green, uint16_t blue) {
   for (uint8_t cv6 = 0; cv6 < 7; cv6++) {
@@ -66,6 +66,7 @@ int EPD_7in3e_display_BMP(const char *path, float vol) {
       for (uint16_t col = 0; col < 400; col++)  // for each pixel, in groups of two
       {
         //Serial.printf("Column :%d\r\n",col);
+        //image rotated and byte order flipped because connector is at the top
         BlackImage[row * 400 + (399-col)] = (color6(buff[col * 6 + 5], buff[col * 6 + 4], buff[col * 6 + 3])<<4) | (color6(buff[col * 6 + 2], buff[col * 6 + 1], buff[col * 6 + 0]) );
       }  // end pixel
       //Serial.printf("Row :%d\r\n",row);
@@ -94,45 +95,6 @@ int EPD_7in3e_display_BMP(const char *path, float vol) {
   return 0;
 }
 
-int EPD_7in3e_display(float vol) {
-  printf("e-Paper Init and Clear...\r\n");
-  EPD_7IN3E_Init();
-
-  //Create a new image cache
-  UBYTE *BlackImage;
-  UDOUBLE Imagesize = ((EPD_7IN3E_WIDTH % 2 == 0) ? (EPD_7IN3E_WIDTH / 2) : (EPD_7IN3E_WIDTH / 2 + 1)) * EPD_7IN3E_HEIGHT;
-  if ((BlackImage = (UBYTE *)malloc(Imagesize)) == NULL) {
-    printf("Failed to apply for black memory...\r\n");
-    return -1;
-  }
-  Serial.printf("Paint_NewImage\r\n");
-  Paint_NewImage(BlackImage, EPD_7IN3E_WIDTH, EPD_7IN3E_HEIGHT, 0, EPD_7IN3E_WHITE);
-  Paint_SetScale(6);
-
-  printf("Display BMP\r\n");
-  Paint_SelectImage(BlackImage);
-  Paint_Clear(EPD_7IN3E_WHITE);
-
-  Paint_DrawBitMap(Image6color);
-
-  Paint_SetRotate(180);
-  char strvol[21] = { 0 };
-  sprintf(strvol, "%f V", vol);
-  if (vol < 5.1) {
-    Paint_DrawString_EN(10, 10, "Low voltage, please charge in time.", &Font16, EPD_7IN3E_BLACK, EPD_7IN3E_WHITE);
-    Paint_DrawString_EN(10, 26, strvol, &Font16, EPD_7IN3E_BLACK, EPD_7IN3E_WHITE);
-  }
-
-  Serial.printf("EPD_Display\r\n");
-  EPD_7IN3E_Display(BlackImage);
-
-  Serial.printf("Goto Sleep...\r\n\r\n");
-  EPD_7IN3E_Sleep();
-  free(BlackImage);
-  BlackImage = NULL;
-
-  return 0;
-}
 
 String Random_File() {
   Serial.print("Listing directory: ");
@@ -171,31 +133,38 @@ void setup() {
   }
   Serial.printf("Init...\r\n");
   if (DEV_Module_Init() != 0) {  // DEV init
-    Serial.printf("Failed to init...\r\n");
+    Serial.printf("Failed to init DEV...\r\n");
     return;
   }
   SPI.setRX(SD_MISO_PIN);
   SPI.setTX(SD_MOSI_PIN);
   SPI.setSCK(SD_CLK_PIN);
-  if (SD.begin(SD_CS_PIN)) {  // using spi0
-    Serial.printf("Init SD ok...\r\n");
-    Serial.print("Card size:  ");
-    Serial.println((float)SD.size64() / 1000);
-    Serial.print("Picked File: ");
-    strcpy(FileName, localImagePath.c_str());
-    strcat(FileName, "/");
-    strcat(FileName, Random_File().c_str());
-  
-    Serial.println(FileName);
+  if (!SD.begin(SD_CS_PIN)) {  // using spi0
+    Serial.printf("Init SD failed...\r\n");
+    return;
   }
+  
+  Serial.print("Card size:  ");
+  Serial.println((float)SD.size64() / 1000);
+  Serial.print("Picked File: ");
+  strcpy(FileName, localImagePath.c_str());
+  strcat(FileName, "/");
+  strcat(FileName, Random_File().c_str());
+
+  Serial.println(FileName);
+  
   //watchdog_enable(8*1000, 1);   // 8s
-  DEV_Delay_ms(1000);
+  //DEV_Delay_ms(1000);
   PCF85063_init();  // RTC init
-  //PCF85063_test();
-  //PCF85063_clear_alarm_flag();    // clear RTC alarm flag
-  //PCF85063_alarm_Time_Disable();
+  Time_data Time = {2025-2000, 5, 31, 0, 0, 0};
+  Time_data alarmTime = Time;
+  // alarmTime.seconds += 10;
+  alarmTime.minutes += 5; 
+  //alarmTime.hours +=12;
+  rtcRunAlarm(Time, alarmTime);  // RTC run alarm
   EPD_7in3e_display_BMP(FileName,measureVBAT());
-  //EPD_7in3e_test();
+  Serial.printf("power off ...\r\n");
+  powerOff(); // BAT off
 }
 
 void loop() {
