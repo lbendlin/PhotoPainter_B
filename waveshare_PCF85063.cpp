@@ -203,8 +203,7 @@ void PCF85063_test()
 
 void rtcRunAlarm(Time_data time, Time_data alarmTime)
 {
-    PCF85063_SetTime_HMS(time.hours, time.minutes, time.seconds);
+  PCF85063_SetTime_HMS(time.hours, time.minutes, time.seconds);
 	PCF85063_SetTime_YMD(time.years, time.months, time.days);
-
-    PCF85063_alarm_Time_Enabled(alarmTime);
+  PCF85063_alarm_Time_Enabled(alarmTime);
 }
